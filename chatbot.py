@@ -41,7 +41,8 @@ class Chatbot:
         Consider adding to this description any information about what your
         chatbot can do and how the user can interact with it.
         """
-        return """
+        return "Hi, I am a chatbot which makes movie recommendations based on your previous preferences. I'm a great and fun way to learn about movies and try something new!"
+        """
         Your task is to implement the chatbot as detailed in the HW6
         instructions (README.md).
 
