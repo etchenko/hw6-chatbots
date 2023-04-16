@@ -57,7 +57,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "How can I help you?"
+        greeting_message = "Hello! I'm here to help recommend movies. What do you want to do today?"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -72,7 +72,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Have a nice day!"
+        goodbye_message = "I hope I was able to help! Come back if you want more movie recommendations!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
