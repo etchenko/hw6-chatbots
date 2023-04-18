@@ -209,12 +209,11 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
-        pattern = r'title'
+        pattern = title
         result = []
         idx = 0
         for movie in self.titles:
-            m = re.match(title, movie[0])
-            if m:
+            if re.search(pattern, movie[0]):
                 result.append(idx)
             idx+=1
         return result
@@ -278,7 +277,8 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
-        return [] # TODO: delete and replace this line
+        return []
+        
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
