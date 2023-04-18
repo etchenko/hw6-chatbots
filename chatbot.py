@@ -209,11 +209,10 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
-        pattern = title
         result = []
         idx = 0
         for movie in self.titles:
-            if re.search(pattern, movie[0]):
+            if re.search(title, movie[0]):
                 result.append(idx)
             idx+=1
         return result
@@ -277,7 +276,11 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
-        return []
+        for c in candidates:
+            title = self.titles[c][0]
+            if not re.search(clarification, title):
+                candidates.remove(c)
+        return candidates
         
         ########################################################################
         #                          END OF YOUR CODE                            #
