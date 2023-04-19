@@ -8,11 +8,18 @@ from sklearn import linear_model
 import nltk 
 from collections import defaultdict, Counter
 from typing import List, Dict, Union, Tuple
+from enum import Enum
 
 import util
 
 class Chatbot:
     """Class that implements the chatbot for HW 6."""
+
+    class ExpectedReplies(Enum):
+      TITLE = 1
+      SENTIMENT = 2
+      CLARIFICATION = 3
+      CONTINUE = 4
 
     def __init__(self):
         # The chatbot's default name is `moviebot`.
@@ -29,7 +36,22 @@ class Chatbot:
         # Train the classifier
         self.train_logreg_sentiment_classifier()
 
-        # TODO: put any other class variables you need here 
+        # TODO: put any other class variables you need here
+        # This enum is used in process() to guide the chatbot
+        self.expectedreply = self.ExpectedReplies.TITLE
+
+        # This array is used to temporarily store movie candidates before disambiguating them
+        self.candidates = []
+
+        # This dict stores up to 5 key-value pairs of movie_idx-sentiment for the user
+        self.user_ratings = dict()
+
+        self.response = ""
+        self.current_title = ""
+        self.possible_movie_idx = []
+        self.current_movie_idx = -1
+        self.current_sentiment = 0
+        self.recommended_movie_idx = 0
 
     ############################################################################
     # 1. WARM UP REPL                                                          #
@@ -119,16 +141,80 @@ class Chatbot:
         # directly based on how modular it is, we highly recommended writing   #
         # code in a modular fashion to make it easier to improve and debug.    #
         ########################################################################
+        
+        self.response = ""
 
-        titles = self.extract_titles(line)
-        print(titles)
+        def extract_movie():
+            if len(self.possible_movie_idx) == 0:
+                self.response += "I can't seem to find '{}'. Did you mean something else?".format(self.current_title)
+                self.expectedreply = self.ExpectedReplies.TITLE
+                return self.response
+            elif len(self.possible_movie_idx) > 1:
+                self.candidates = [self.titles[indices] for indices in self.possible_movie_idx]
+                self.response += "Please be more precise. Which movie did you mean in this list: {}? ".format(self.candidates)
+                self.expectedreply = self.ExpectedReplies.CLARIFICATION
+                return self.response
+            else:
+                self.response += "Thank you! "
+                self.current_movie_idx = self.possible_movie_idx[0]
+                self.user_ratings[self.current_movie_idx] = self.current_sentiment
+                if len(self.user_ratings) == 5:
+                    self.response += "That's enough for me to make a recommendation. I suggest you watch {}. Would you like another recommendation?".format(self.recommend_movies(self.user_ratings)[0])
+                    self.expectedreply = self.ExpectedReplies.CONTINUE
+                    return self.response
+                else:
+                    self.response += "I want to hear more about movies! Tell me about another movie you have seen."
+                    self.expectedreply = self.ExpectedReplies.TITLE
+                    return self.response
+        
+        def extract_sentiment():
+            # TODO: we can swap this out with predict_sentiment_rule_based too
+            self.current_sentiment = self.predict_sentiment_statistical(line)
+            if self.current_sentiment != 0:
+                self.response += "Ok, you {sentiment} '{title}'. ".format(sentiment = "liked" if self.current_sentiment > 0 else "disliked", title=self.current_title)
+                extract_movie()
+            else:
+                self.response += "I'm sorry, I'm not quite sure if you liked '{title}'. Tell me more about '{title}'. ".format(title=self.current_title)
+                return self.response
 
-        response = "I (the chatbot) processed '{}'".format(line)
+        # the chatbot is expecting a title
+        if self.expectedreply == self.ExpectedReplies.TITLE:
+
+            # extract the title
+            titles = self.extract_titles(line)
+            if len(titles) == 0:
+                self.response += "Sorry, I don't understand. Tell me about a movie that you've seen with the title in quotation marks."
+                return self.response
+            elif len(titles) > 1:
+                self.response += "Let's focus on just one movie at a time. "
+            self.current_title = titles[0]
+
+            # extract the sentiment
+            extract_sentiment()
+
+            # extract the movie
+            self.possible_movie_idx = self.find_movies_idx_by_title(self.current_title)
+            extract_movie()
+
+        # the chatbot is expecting a sentiment
+        elif self.expectedreply == self.ExpectedReplies.SENTIMENT:
+            extract_sentiment()
+    
+        # the chatbot is expecting a clarification
+        elif self.expectedreply == self.ExpectedReplies.CLARIFICATION:
+            self.possible_movie_idx = self.disambiguate_candidates(line, self.possible_movie_idx)
+            extract_movie()
+
+        # the chatbot is expecting a yes/no answer to "continue?"
+        else:
+            self.recommended_movie_idx += 1
+            self.response += "Another recommendation is '{}'. Would you like to hear another?".format(self.recommend_movies(self.user_ratings)[self.recommended_movie_idx])
+            return self.response
 
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
-        return response
+        return self.response
 
     def extract_titles(self, user_input: str) -> list:
         """Extract potential movie titles from the user input.
