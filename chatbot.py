@@ -47,11 +47,14 @@ class Chatbot:
         self.user_ratings = dict()
 
         self.response = ""
+
         self.current_title = ""
         self.possible_movie_idx = []
         self.current_movie_idx = -1
         self.current_sentiment = 0
-        self.recommended_movie_idx = 0
+
+        self.recommended_movies = []
+        self.NUM_RECOMMENDED_MOVIES = 5
 
     ############################################################################
     # 1. WARM UP REPL                                                          #
@@ -148,34 +151,30 @@ class Chatbot:
             if len(self.possible_movie_idx) == 0:
                 self.response += "I can't seem to find '{}'. Did you mean something else?".format(self.current_title)
                 self.expectedreply = self.ExpectedReplies.TITLE
-                return self.response
             elif len(self.possible_movie_idx) > 1:
-                self.candidates = [self.titles[indices] for indices in self.possible_movie_idx]
+                self.candidates = [self.titles[indices][0] for indices in self.possible_movie_idx]
                 self.response += "Please be more precise. Which movie did you mean in this list: {}? ".format(self.candidates)
                 self.expectedreply = self.ExpectedReplies.CLARIFICATION
-                return self.response
             else:
                 self.response += "Thank you! "
                 self.current_movie_idx = self.possible_movie_idx[0]
                 self.user_ratings[self.current_movie_idx] = self.current_sentiment
                 if len(self.user_ratings) == 5:
-                    self.response += "That's enough for me to make a recommendation. I suggest you watch {}. Would you like another recommendation?".format(self.recommend_movies(self.user_ratings)[0])
+                    self.recommended_movies = self.recommend_movies(self.user_ratings, self.NUM_RECOMMENDED_MOVIES)
+                    self.response += "That's enough for me to make a recommendation. I suggest you watch {}. Would you like another recommendation? (Or enter :quit if you're done.)".format(self.recommended_movies[0])
+                    self.recommended_movies.pop(0)
                     self.expectedreply = self.ExpectedReplies.CONTINUE
-                    return self.response
                 else:
                     self.response += "I want to hear more about movies! Tell me about another movie you have seen."
                     self.expectedreply = self.ExpectedReplies.TITLE
-                    return self.response
         
         def extract_sentiment():
             # TODO: we can swap this out with predict_sentiment_rule_based too
             self.current_sentiment = self.predict_sentiment_statistical(line)
             if self.current_sentiment != 0:
                 self.response += "Ok, you {sentiment} '{title}'. ".format(sentiment = "liked" if self.current_sentiment > 0 else "disliked", title=self.current_title)
-                extract_movie()
             else:
                 self.response += "I'm sorry, I'm not quite sure if you liked '{title}'. Tell me more about '{title}'. ".format(title=self.current_title)
-                return self.response
 
         # the chatbot is expecting a title
         if self.expectedreply == self.ExpectedReplies.TITLE:
@@ -191,6 +190,8 @@ class Chatbot:
 
             # extract the sentiment
             extract_sentiment()
+            if self.current_sentiment == 0:
+                return self.response
 
             # extract the movie
             self.possible_movie_idx = self.find_movies_idx_by_title(self.current_title)
@@ -205,11 +206,16 @@ class Chatbot:
             self.possible_movie_idx = self.disambiguate_candidates(line, self.possible_movie_idx)
             extract_movie()
 
-        # the chatbot is expecting a yes/no answer to "continue?"
+        # the chatbot will continue spitting out recommendations if it's not "no" until it runs out
         else:
-            self.recommended_movie_idx += 1
-            self.response += "Another recommendation is '{}'. Would you like to hear another?".format(self.recommend_movies(self.user_ratings)[self.recommended_movie_idx])
-            return self.response
+            if "no" in line:
+                self.response += "Ok!"
+            else:
+                if self.recommended_movies:
+                    self.response += "Another recommendation is '{}'. Would you like to hear another? (Or enter :quit if you're done.)".format(self.recommended_movies[0])
+                    self.recommended_movies.pop(0)
+                else:
+                    self.response += "Sorry, but I am out of recommendations."
 
         ########################################################################
         #                          END OF YOUR CODE                            #
