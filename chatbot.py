@@ -413,7 +413,26 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                  
-        return 0 # TODO: delete and replace this line
+        pattern = r"\w+"
+        tokens = re.findall(pattern, user_input)
+        pos_tok_count = 0
+        neg_tok_count = 0
+
+        for tok in tokens:
+            t = tok.lower()
+            if t in self.sentiment:
+                if self.sentiment[t] == 'pos':
+                    pos_tok_count += 1
+                else:
+                    neg_tok_count += 1
+
+        if pos_tok_count > neg_tok_count:
+            return 1
+        elif neg_tok_count > pos_tok_count:
+            return -1
+        else:
+            return 0
+        
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
