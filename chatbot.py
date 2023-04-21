@@ -170,8 +170,9 @@ class Chatbot:
         
         def extract_sentiment():
             # TODO: we can swap this out with predict_sentiment_rule_based too
-            self.current_sentiment = self.predict_sentiment_statistical(line)
+            self.current_sentiment = self.predict_sentiment_rule_based(line)
             if self.current_sentiment != 0:
+                print(self.current_sentiment)
                 self.response += "Ok, you {sentiment} '{title}'. ".format(sentiment = "liked" if self.current_sentiment > 0 else "disliked", title=self.current_title)
             else:
                 self.response += "I'm sorry, I'm not quite sure if you liked '{title}'. Tell me more about '{title}'. ".format(title=self.current_title)
@@ -194,6 +195,7 @@ class Chatbot:
                 return self.response
 
             # extract the movie
+            # don't include the quotation marks
             self.possible_movie_idx = self.find_movies_idx_by_title(self.current_title)
             extract_movie()
 
@@ -302,9 +304,11 @@ class Chatbot:
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
         result = []
+        pattern = fr'.*{title}.*'
         idx = 0
         for movie in self.titles:
-            if re.search(title, movie[0]):
+            match = re.match(pattern, movie[0])
+            if match:
                 result.append(idx)
             idx+=1
         return result
@@ -368,11 +372,15 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
+        
+        result = []
+        pattern = fr'.*{clarification}.*'
         for c in candidates:
             title = self.titles[c][0]
-            if not re.search(clarification, title):
-                candidates.remove(c)
-        return candidates
+            match = re.search(pattern, title)
+            if match:
+                result.append(c)
+        return result
         
         ########################################################################
         #                          END OF YOUR CODE                            #
