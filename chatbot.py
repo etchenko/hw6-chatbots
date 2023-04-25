@@ -473,9 +473,14 @@ class Chatbot:
         ########################################################################
         #                          START OF YOUR CODE                          #
         ########################################################################                                                
+        self.count_vectorizer = CountVectorizer(lowercase = True, stop_words='english')
         
-        pass # TODO: delete and replace this line
+        X_train = self.count_vectorizer.fit_transform(texts).toarray()
+        Y_train = np.array([[1 if label=="Fresh" else -1] for label in y])
 
+        logistic_regression_classifier = sklearn.linear_model.LogisticRegression(penalty=None)
+        self.model = logistic_regression_classifier.fit(X_train, Y_train)
+        
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
