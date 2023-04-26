@@ -172,7 +172,6 @@ class Chatbot:
             # TODO: we can swap this out with predict_sentiment_rule_based too
             self.current_sentiment = self.predict_sentiment_statistical(line)
             if self.current_sentiment != 0:
-                print(self.current_sentiment)
                 self.response += "Ok, you {sentiment} '{title}'. ".format(sentiment = "liked" if self.current_sentiment > 0 else "disliked", title=self.current_title)
             else:
                 self.response += "I'm sorry, I'm not quite sure if you liked '{title}'. Tell me more about '{title}'. ".format(title=self.current_title)
@@ -519,7 +518,7 @@ class Chatbot:
         #                          START OF YOUR CODE                          #
         ########################################################################
         bag_of_words_representation = self.count_vectorizer.transform([user_input.lower()])
-        if not bag_of_words_representation.toarray().any():
+        if not bag_of_words_representation.toarray()[0].any():
             return 0
         return self.model.predict(bag_of_words_representation)[0]
         ########################################################################
