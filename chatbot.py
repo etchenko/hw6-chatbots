@@ -170,7 +170,7 @@ class Chatbot:
         
         def extract_sentiment():
             # TODO: we can swap this out with predict_sentiment_rule_based too
-            self.current_sentiment = self.predict_sentiment_rule_based(line)
+            self.current_sentiment = self.predict_sentiment_statistical(line)
             if self.current_sentiment != 0:
                 print(self.current_sentiment)
                 self.response += "Ok, you {sentiment} '{title}'. ".format(sentiment = "liked" if self.current_sentiment > 0 else "disliked", title=self.current_title)
@@ -479,7 +479,7 @@ class Chatbot:
         Y_train = np.array([[1 if label=="Fresh" else -1] for label in y])
 
         logistic_regression_classifier = sklearn.linear_model.LogisticRegression(penalty=None)
-        self.model = logistic_regression_classifier.fit(X_train, Y_train)
+        self.model = logistic_regression_classifier.fit(X_train, np.ravel(Y_train))
         
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -517,8 +517,11 @@ class Chatbot:
         """
         ########################################################################
         #                          START OF YOUR CODE                          #
-        ########################################################################                                             
-        return 0 # TODO: delete and replace this line
+        ########################################################################
+        bag_of_words_representation = self.count_vectorizer.transform([user_input.lower()])
+        if not bag_of_words_representation.toarray().any():
+            return 0
+        return self.model.predict(bag_of_words_representation)[0]
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
