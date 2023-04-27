@@ -565,11 +565,11 @@ class Chatbot:
 
 
         # use self.ratings, and user_ratings
-        user_ratings_all = [0 if i not in user_ratings.keys() else user_ratings[i] for i in range(len(self.titles))]
-        ratings_matrix = util.binarize(self.ratings)
-        user_rating_all_movies = util.binarize(user_ratings_all)
-        recommendations = util.recommend(user_rating_all_movies, ratings_matrix, num_return)                                                
-        return recommendations  # TODO: delete and replace this line
+        user_rating_all_movies = np.array([0 if i not in user_ratings.keys() else user_ratings[i] for i in range(len(self.titles))])
+
+        ratings_matrix = np.array(self.ratings)
+        recommendations = util.recommend(user_rating_all_movies, ratings_matrix, num_return)                                            
+        return [self.titles[i][0] for i in recommendations]  # TODO: delete and replace this line
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
