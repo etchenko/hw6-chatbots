@@ -303,13 +303,12 @@ class Chatbot:
         #                          START OF YOUR CODE                          #
         ########################################################################                                                 
         result = []
-        pattern = fr'.*{title}.*'
-        idx = 0
-        for movie in self.titles:
+        title = title.replace('(','\(').replace(')','\)')
+        pattern = f'.*{title}.*'
+        for i, movie in enumerate(self.titles):
             match = re.match(pattern, movie[0])
             if match:
-                result.append(idx)
-            idx+=1
+                result.append(i)
         return result
         
         ########################################################################
@@ -474,10 +473,10 @@ class Chatbot:
         ########################################################################                                                
         self.count_vectorizer = CountVectorizer(lowercase = True, stop_words='english')
         
-        X_train = self.count_vectorizer.fit_transform(texts).toarray()
+        X_train = self.count_vectorizer.fit_transform([i.lower() for i in texts]).toarray()
         Y_train = np.array([[1 if label=="Fresh" else -1] for label in y])
 
-        logistic_regression_classifier = sklearn.linear_model.LogisticRegression(penalty=None)
+        logistic_regression_classifier = sklearn.linear_model.LogisticRegression(penalty='l2')
         self.model = logistic_regression_classifier.fit(X_train, np.ravel(Y_train))
         
         ########################################################################
