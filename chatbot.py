@@ -147,6 +147,8 @@ class Chatbot:
         
         self.response = ""
 
+        line = self.fix_simple_spelling(line)
+
         def extract_movie():
             if len(self.possible_movie_idx) == 0:
                 self.response += "I can't seem to find '{}'. Did you mean something else?".format(self.current_title)
@@ -578,12 +580,40 @@ class Chatbot:
     # 5. Open-ended                                                            #
     ############################################################################
 
-    def function1():
+    def fix_simple_spelling(self, line: str) -> str:
         """
-        TODO: delete and replace with your function.
-        Be sure to put an adequate description in this docstring.  
+        This function takes a line and returns it with simple spelling mistakes fixed, if any. 
+        
+        Arguments:     
+            - line (str) : a user-supplied line of text
+
+        Returns: 
+            - a string with the correct spelling
+
+        Example: 
+            fixed = chatbot.fix_simple_spelling('I liek "Avatar"')
+            print(fixed) // prints 'I like "Avatar"'
         """
-        pass
+        spelling_mistakes = {
+            "liek": "like",
+            "lieked": "liked",
+            "loev": "love",
+            "loeved": "loved",
+            "disliek": "dislike",
+            "dislieked": "disliked",
+            "graet": "great",
+            "wosrt": "worst",
+            "horible": "horrible",
+            "terible": "terrible",
+            "amazeing": "amazing",
+            "fritening": "frightening",
+            "romnatic": "romantic",
+            "funy": "funny",
+            "sacry": "scary",
+            "exiting": "exciting"
+        }
+
+        return ' '.join([spelling_mistakes[word] if word in spelling_mistakes else word for word in line.split()])
 
     def function2():
         """
