@@ -23,7 +23,7 @@ class Chatbot:
 
     def __init__(self):
         # The chatbot's default name is `moviebot`.
-        self.name = 'moviebot' # TODO: Give your chatbot a new name.
+        self.name = 'moritokary bot' # TODO: Give your chatbot a new name.
 
         # This matrix has the following shape: num_movies x num_users
         # The values stored in each row i and column j is the rating for
@@ -82,7 +82,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hello! I'm here to help recommend movies. What do you want to do today?"
+        greeting_message = f"Hello! My name is {self.name}, and I'm here to help recommend movies. What do you want to do today?"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -561,8 +561,15 @@ class Chatbot:
         """ 
         ########################################################################
         #                          START OF YOUR CODE                          #
-        ########################################################################                                                    
-        return [""]  # TODO: delete and replace this line
+        ########################################################################    
+
+
+        # use self.ratings, and user_ratings
+        user_ratings_all = [0 if i not in user_ratings.keys() else user_ratings[i] for i in range(len(self.titles))]
+        ratings_matrix = util.binarize(self.ratings)
+        user_rating_all_movies = util.binarize(user_ratings_all)
+        recommendations = util.recommend(user_rating_all_movies, ratings_matrix, num_return)                                                
+        return recommendations  # TODO: delete and replace this line
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
