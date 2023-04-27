@@ -148,7 +148,7 @@ class Chatbot:
         self.response = ""
 
         line = self.fix_simple_spelling(line)
-
+        
         def extract_movie():
             if len(self.possible_movie_idx) == 0:
                 self.response += "I can't seem to find '{}'. Did you mean something else?".format(self.current_title)
@@ -184,6 +184,11 @@ class Chatbot:
             # extract the title
             titles = self.extract_titles(line)
             if len(titles) == 0:
+                # is the user expressing an emotion? if so, respond appropriately
+                if (self.respond_to_emotion(line)):
+                    self.response += self.respond_to_emotion(line)
+                    return self.response
+
                 self.response += "Sorry, I don't understand. Tell me about a movie that you've seen with the title in quotation marks."
                 return self.response
             elif len(titles) > 1:
@@ -615,12 +620,44 @@ class Chatbot:
 
         return ' '.join([spelling_mistakes[word] if word in spelling_mistakes else word for word in line.split()])
 
-    def function2():
+    def respond_to_emotion(self, line: str) -> str:
         """
-        TODO: delete and replace with your function.
-        Be sure to put an adequate description in this docstring.  
+        This function takes in a line and and identifies whether the user is expressing an emotion and if so, responds to it.
+        
+        Arguments:
+            - line (str) : a user-supplied line of text
+            
+        Returns:
+            - a string which responds to the user's emotion 
+            - None if the user does not express an emotion
+            
+        Example:
+            response = chatbot.respond_to_emotion("I am angry")
+            print(response) // prints "Oh no! I'm sorry to hear that you are angry. Maybe a movie will make you feel better?"
+            
         """
-        pass  
+        emotions = [
+            "happy", 
+            "sad",
+            "angry",
+            "upset", 
+            "overjoyed",
+            "calm",
+            "excited"
+        ]
+        
+        for e in emotions:
+            pattern = f'(am|feel) ({e})'
+            match = re.findall(pattern, line)
+            if match:
+                emotion = match[0][1]
+                if self.sentiment[emotion] == 'pos':
+                    return f"That's great! I'm happy you are {emotion}. Keep up the good vibes with a movie!"
+                elif self.sentiment[emotion] == 'neg':
+                    return f"Oh no! I'm sorry to hear that you are {emotion}. Maybe a movie will make you feel better?"
+                else:
+                    return f"I understand that you are {emotion}."
+        return None
 
     def function3(): 
         """
