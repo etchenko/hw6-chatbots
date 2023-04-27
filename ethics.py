@@ -22,7 +22,7 @@ Q1_your_answer = """
 We don't think that users will anthropomorphize our chatbot, since it is incredibly simplistic and requires a rigid interaction
 structure in order to function. The chatbot is unable to interact with the user in any way besides recommending movies, which makes it
 harder to view it as human. However, the addition of human-like ticks (i.e. 'oh!', 'thanks!') and the fact that the chatbot responds in
-perfect English means its not impossible. 
+perfect English means it's not impossible. 
 
 In general, anthropomorphization of chatbot systems can be dangerous, for many reasons. On the extreme level, this can take the form of
 humans believing that the chatbot has a consciousness and can feel (such as what happend with LaMDA), which can cause many issues for both
@@ -58,7 +58,7 @@ Q2_your_answer = """
 Our chatbot does not have a risk of doing so. All of the information that the chatbot initially starts with is anonymized,
 so there is no chance in that sense. The chatbot is also a local machine, and thus it does not pose the risk of leaking the data
  onto the internet. Finally, our chatbot will stop after it recommends movies to you, and all of the data regarding your likes will be erased,
-so there is nothing left after you finish interacting with oru chatbot. 
+so there is nothing left after you finish interacting with our chatbot. 
 
 In order to help mitigate the risk of leaking data, here are a few ideas:
 1. Have the chatbot run locally, thus meaning no data will be reported over the internet.
@@ -83,20 +83,20 @@ citizens -- should do in anticipation of these risks and/or in response to these
 Q3_your_answer = """
 
 Automation, regardless of whether it occurs in dialogue systems or in other areas of industry, should first and foremost be used as a way to ease human labor
-and help people live their lives more easily. If we arrived at a point where all tasks necessary for survival and global functioning where automated, we would hope
+and help people live their lives more easily. If we arrived at a point where all tasks necessary for survival and global functioning were automated, we would hope
 that all human would be equally able to enjoy their lives. The current capitalist economic system however is incompatible with this type of ideology and the future of automation.
 The motivation behind automation under capitalism is not to ease human labor, but rather to increase profits for the small capitalist owner class, while the workers are left holding the 
-short end of the stick. Since the 1970s, automation and technology has allowed human productivity to increase dramatically, putting more and more money into the pockets of the wealthy, 
+short end of the stick. Since the 1970s, automation and technology has allowed human productivity to increase dramatically, putting more and more money into the pockets of the wealthy few, 
 while the wages of the working class have remained relatively stagnant. This means that rather than look forward to automation, workers actively fear it, since automation means unemployment
 for the replaced workers. The simplest and most basic way to combat this to be considered by elected government officials is the introduction of a Universal Basic Income (UBI). As automation starts to 
 take over more and more jobs, a UBI would allow those whose jobs are taken over by automation to still survive and live happy lives. However, UBI is just a temporary way to address the issue, and will 
 not be able to solve the issues in a manner that will allow everyone to live well, because of the complexities behind worker motivation under UBI, calculating the right amount of UBI to still mantain a 
 functioning society, and so on. A slightly better solution is for elected government officials to force a restructuring around the way workers interact with the business they work for. By forcing business 
 to make the workers equal stakeholders in the business (the complexities of creating a truly socialist and worker - owned business is still a problem people are working on), workers are more incentivized to 
-achieve automation, since their livelihoods will not be taken away if their jobs are automated. However, this will still not fully solve the issue, as businesses still operate in a 'proft first' mindset, which ultimately 
-benefits nobody but the stakeholders in theshort term. Ultimately, as automation becomes more and more prevalent, we as a society must shift further and further towards a socialist existence, one where a small minority 
+achieve automation, since their livelihoods will not be taken away if their jobs are automated. However, this will still not fully solve the issue, as businesses still operate with a 'profit first' mindset, which ultimately 
+benefits nobody but the stakeholders in the short term. Ultimately, as automation becomes more and more prevalent, we as a society must shift further and further towards a socialist existence, one where a small minority 
 of people do not hold a majority of the wealth, and one where everyone in the society equally benefts from the automation of a given industry, not just those in the business. Capitalism is incompatible with the longterm 
-wellbeing of humans on the planet, and thus we must do everything in our power to dismantle the broken system that we live in and build something that will won't kill the planet in 50 years. Thus, the only REAL longterm solution, 
+wellbeing of humans on the planet, and thus we must do everything in our power to dismantle the broken system that we live in and build something that won't kill the planet in 50 years. Thus, the only REAL longterm solution, 
 and the best way for us to address the issues of automation, is to work towards building a socialist/communist society, one where automation is not an issue, but rather a blessing.
 
 """
@@ -115,7 +115,7 @@ There are a few advantages to this type of system over ChatGPT. Since this syste
 which means that we end up using a lot less compute power to train and run the model than is necessary for the end-to-end deep learning approaches. We are also able to update the rules 
 as we see fit, and will not have to retrain the entire model when making updates. We can also incrementally add modules and more functionality if necessary, and remove functionality if it does
 not become necessary. We can use the tools of vectorization that are already available rather than having to do so ourselves. However, unlike an end-to-end deep learning approach, our model is quite 
-rigid, and thus may not work quite well in a lot of edge cases. As the functinality becomes more complicated, the rules will become more complex and more difficult to manage, while end-to-end systems
+rigid, and thus may not work quite well in a lot of edge cases. As the functionality becomes more complicated, the rules will become more complex and more difficult to manage, while end-to-end systems
 can be retrained.
 
 """
